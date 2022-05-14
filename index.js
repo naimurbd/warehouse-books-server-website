@@ -58,18 +58,20 @@ async function run() {
 
         //update item when click restock
 
-        app.put('/item/:id', async (req, res) => {
+        app.put('/restockitem/:id', async (req, res) => {
             const id = req.params.id;
             const updatedUser = req.body;
+            console.log(updatedUser);
             const filter = { _id: ObjectId(id) };
             const options = { upsert: true };
             const updatedDoc = {
                 $set: {
-                    number: updatedUser.number
+                    quantity: updatedUser.newQuantityIncrease
                 }
             };
             const result = await itemCollection.updateOne(filter, updatedDoc, options);
-            res.send(result);
+            const answer = await itemCollection.findOne(filter);
+            res.send(answer);
         })
 
 
