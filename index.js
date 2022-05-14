@@ -1,7 +1,6 @@
 const express = require('express');
 const cors = require('cors');
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
-// const ObjectId = require('mongodb').ObjectId;
 require('dotenv').config();
 const port = process.env.PORT || 5000;
 const app = express();
@@ -48,6 +47,7 @@ async function run() {
             const filter = { _id: ObjectId(id) };
             const options = { upsert: true };
             const updatedDoc = {
+                // $set: updateQuantity
                 $set: {
                     quantity: updateQuantity.quantity
                 }
@@ -55,6 +55,26 @@ async function run() {
             const result = await itemCollection.updateOne(filter, updatedDoc, options);
             res.send(result);
         })
+
+        //update item when click restock
+
+        app.put('/item/:id', async (req, res) => {
+            const id = req.params.id;
+            const updatedUser = req.body;
+            const filter = { _id: ObjectId(id) };
+            const options = { upsert: true };
+            const updatedDoc = {
+                $set: {
+                    number: updatedUser.number
+                }
+            };
+            const result = await itemCollection.updateOne(filter, updatedDoc, options);
+            res.send(result);
+        })
+
+
+
+
 
         //DELET
 
